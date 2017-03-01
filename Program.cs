@@ -28,7 +28,7 @@ namespace send_actionable_message
         static async Task SendMessage(string[] args)
         {
             // Setup MSAL client
-            authClient = new PublicClientApplication(ConfigurationManager.AppSettings.Get("clientId"));
+            authClient = new PublicClientApplication(ConfigurationManager.AppSettings.Get("applicationId"));
 
             try
             {
