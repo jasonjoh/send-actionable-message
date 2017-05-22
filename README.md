@@ -1,6 +1,6 @@
 # Send Actionable Message via the Microsoft Graph
 
-A command-line sample that uses [Microsoft Authentication Library](https://www.nuget.org/packages/Microsoft.Identity.Client) and the [Microsoft Graph Client Library](https://www.nuget.org/packages/Microsoft.Graph/) to send a message with an [actionable message card](https://dev.outlook.com/actions) to the authenticated user.
+A command-line sample that uses [Microsoft Authentication Library](https://www.nuget.org/packages/Microsoft.Identity.Client) and the [Microsoft Graph Client Library](https://www.nuget.org/packages/Microsoft.Graph/) to send a message with an [actionable message card](https://docs.microsoft.com/en-us/outlook/actionable-messages/) to the authenticated user.
 
 ## Running the sample
 
