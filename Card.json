@@ -1,6 +1,7 @@
 ﻿{
   "@type": "MessageCard",
   "@context": "http://schema.org/extensions",
+  "originator": "Provider-id-from-developer-dashboard",
   "summary": "Card \"Test card\"",
   "themeColor": "0078D7",
   "title": "Card created: \"Name of card\"",
