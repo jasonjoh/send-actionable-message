@@ -41,7 +41,7 @@ namespace send_actionable_message
                     new DelegateAuthenticationProvider(
                         (requestMessage) =>
                         {
-                            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", result.Token);
+                            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", result.AccessToken);
                             return Task.FromResult(0);
                         }));
 
