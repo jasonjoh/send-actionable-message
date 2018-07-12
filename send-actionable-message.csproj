@@ -70,6 +70,11 @@
     <Content Include="MessageBody.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy $(ProjectDir)Card.json $(ProjectDir)$(OutDir)
+copy $(ProjectDir)MessageBody.html $(ProjectDir)$(OutDir)
+copy $(ProjectDir)ActivityImage.jpg $(ProjectDir)$(OutDir)</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

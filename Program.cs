@@ -73,7 +73,7 @@ namespace send_actionable_message
                     IsInline = true,
                     ContentId = "activity_image",
                     ContentType = "image/jpg",
-                    ContentBytes = System.IO.File.ReadAllBytes(@"../../ActivityImage.jpg")
+                    ContentBytes = System.IO.File.ReadAllBytes(@".\ActivityImage.jpg")
                 };
 
                 actionableMessage.Attachments.Add(actionImage);
@@ -98,10 +98,10 @@ namespace send_actionable_message
         static string LoadActionableMessageBody()
         {
             // Load the card JSON
-            string cardJson = System.IO.File.ReadAllText(@"..\..\Card.json");
+            string cardJson = System.IO.File.ReadAllText(@".\Card.json");
 
             // Insert the JSON into the HTML
-            return string.Format(System.IO.File.ReadAllText(@"..\..\MessageBody.html"), cardJson);
+            return string.Format(System.IO.File.ReadAllText(@".\MessageBody.html"), cardJson);
         }
     }
 }
