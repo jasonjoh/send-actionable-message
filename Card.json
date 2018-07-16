@@ -46,7 +46,7 @@
         {
           "@type": "HttpPOST",
           "name": "OK",
-          "target": "http://..."
+          "target": "https://contoso.com/api"
         }
       ]
     },
@@ -74,7 +74,7 @@
         {
           "@type": "HttpPOST",
           "name": "OK",
-          "target": "http://..."
+          "target": "https://contoso.com/api"
         }
       ]
     },
@@ -93,7 +93,7 @@
         {
           "@type": "HttpPOST",
           "name": "OK",
-          "target": "http://..."
+          "target": "https://contoso.com/api"
         }
       ]
     },
@@ -103,7 +103,7 @@
       "targets": [
         {
           "os": "default",
-          "uri": "http://..."
+          "uri": "https://contoso.com/api"
         }
       ]
     }

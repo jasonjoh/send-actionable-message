@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 using Microsoft.Identity.Client;
 using Microsoft.Graph;
+using Newtonsoft.Json.Linq;
+using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace send_actionable_message
 {
@@ -20,12 +23,12 @@ namespace send_actionable_message
 
         static void Main(string[] args)
         {
-            SendMessage(args).Wait();
+            SendMessageAsync(args).Wait();
             Console.WriteLine("Hit any key to exit...");
             Console.ReadKey();
         }
 
-        static async Task SendMessage(string[] args)
+        static async Task SendMessageAsync(string[] args)
         {
             // Setup MSAL client
             authClient = new PublicClientApplication(ConfigurationManager.AppSettings.Get("applicationId"));
@@ -37,7 +40,7 @@ namespace send_actionable_message
 
                 // Initialize Graph client with delegate auth provider
                 // that just returns the token we already retrieved
-                GraphServiceClient graphClient = new GraphServiceClient(
+                var graphClient = new GraphServiceClient(
                     new DelegateAuthenticationProvider(
                         (requestMessage) =>
                         {
@@ -45,15 +48,19 @@ namespace send_actionable_message
                             return Task.FromResult(0);
                         }));
 
-                // Create a recipient for the authenticated user
-                Microsoft.Graph.User me = await graphClient.Me.Request().GetAsync();
-                Recipient toRecip = new Recipient()
+                // Create a recipient
+                var me = await graphClient.Me.Request().GetAsync();
+                var toRecip = new Recipient()
                 {
-                    EmailAddress = new EmailAddress() { Address = me.Mail }
+                    EmailAddress = new EmailAddress() {
+                        // If recipient provided as an argument, use that
+                        // If not, use the logged in user
+                        Address = IsValidEmail(args) ? args[0] : me.Mail
+                    }
                 };
 
                 // Create the message
-                Message actionableMessage = new Message()
+                var actionableMessage = new Message()
                 {
                     Subject = "Actionable message sent from code",
                     ToRecipients = new List<Recipient>() { toRecip },
@@ -66,7 +73,7 @@ namespace send_actionable_message
                 };
 
                 // Create an attachment for the activity image
-                FileAttachment actionImage = new FileAttachment()
+                var actionImage = new FileAttachment()
                 {
                     ODataType = "#microsoft.graph.fileAttachment",
                     Name = "activity_image", // IMPORTANT: Name must match ContentId
@@ -95,13 +102,101 @@ namespace send_actionable_message
             }
         }
 
+        // Copied from https://docs.microsoft.com/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format
+        static bool IsValidEmail(string[] args)
+        {
+            if (args.Length <= 0)
+            {
+                return false;
+            }
+
+            var email = args[0];
+            if (string.IsNullOrEmpty(email))
+            {
+                return false;
+            }
+
+            // Handle any Unicode domains
+            try
+            {
+                email = Regex.Replace(email, @"(@)(.+)$", DomainMapper,
+                    RegexOptions.None, TimeSpan.FromMilliseconds(200));
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                return false;
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+
+            try
+            {
+                return Regex.IsMatch(email,
+                    @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
+                    @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-0-9a-z]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$",
+                    RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                return false;
+            }
+        }
+
+        static string DomainMapper(Match match)
+        {
+            var idn = new IdnMapping();
+
+            string domainName = match.Groups[2].Value;
+            domainName = idn.GetAscii(domainName);
+
+            return $"{match.Groups[1].Value}{domainName}";
+        }
+
         static string LoadActionableMessageBody()
         {
             // Load the card JSON
-            string cardJson = System.IO.File.ReadAllText(@".\Card.json");
+            var cardJson = JObject.Parse(System.IO.File.ReadAllText(@".\Card.json"));
+
+            // Check type
+            // First, try "@type", which is the key MessageCard uses
+            var cardType = cardJson.SelectToken("@type");
+            if (cardType == null)
+            {
+                // Maybe it's Adaptive, try "type"
+                cardType = cardJson.SelectToken("type");
+            }
+
+            // If we're still null, or the values are bad, bail
+            if (cardType == null || (cardType.ToString() != "MessageCard" && cardType.ToString() != "AdaptiveCard"))
+            {
+                throw new ArgumentException("The payload in Card.json is missing a valid @type or type property.");
+            }
+
+            string scriptType = cardType.ToString() == "MessageCard" ? "application/ld+json" : "application/adaptivecard+json";
+
+            // Insert originator if one is configured
+            string originatorId = ConfigurationManager.AppSettings.Get("originatorId");
+            if (!string.IsNullOrEmpty(originatorId))
+            {
+                // First check if there is an existing originator value
+                var originator = cardJson.SelectToken("originator");
+
+                if (originator != null)
+                {
+                    // Overwrite existing value
+                    cardJson["originator"] = originatorId;
+                }
+                else
+                {
+                    // Add value
+                    cardJson.Add(new JProperty("originator", originatorId));
+                }
+            }
 
             // Insert the JSON into the HTML
-            return string.Format(System.IO.File.ReadAllText(@".\MessageBody.html"), cardJson);
+            return string.Format(System.IO.File.ReadAllText(@".\MessageBody.html"), scriptType, cardJson.ToString());
         }
     }
 }

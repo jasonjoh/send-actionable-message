@@ -1,0 +1,184 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "version": "1.0",
+  "type": "AdaptiveCard",
+  "speak": "<s>Your flight is confirmed for you and 3 other passengers from San Francisco to Amsterdam on Friday, October 10 8:30 AM</s>",
+  "body": [
+    {
+      "type": "ColumnSet",
+      "columns": [
+        {
+          "width": "stretch",
+          "verticalContentAlignment": "center",
+          "items": [
+            {
+              "type": "TextBlock",
+              "size": "medium",
+              "text": "**FLIGHT ITINERARY - CONTOSO AIR**"
+            },
+            {
+              "type": "TextBlock",
+              "spacing": "none",
+              "text": "Passenger: David Claux",
+              "isSubtle": true
+            }
+          ]
+        },
+        {
+          "width": "auto",
+          "items": [
+            {
+              "type": "Image",
+              "width": "48px",
+              "url": "http://acdesignerbeta.azurewebsites.net/assets/Airplane_Co_Ico.png"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "TextBlock",
+      "text": "2 Stops",
+      "weight": "bolder",
+      "spacing": "medium"
+    },
+    {
+      "type": "TextBlock",
+      "text": "Fri, October 10 8:30 AM",
+      "weight": "bolder",
+      "spacing": "none"
+    },
+    {
+      "type": "ColumnSet",
+      "separator": true,
+      "columns": [
+        {
+          "type": "Column",
+          "width": 1,
+          "items": [
+            {
+              "type": "TextBlock",
+              "text": "San Francisco",
+              "isSubtle": true
+            },
+            {
+              "type": "TextBlock",
+              "size": "extraLarge",
+              "color": "accent",
+              "text": "SFO",
+              "spacing": "none"
+            }
+          ]
+        },
+        {
+          "type": "Column",
+          "width": "auto",
+          "items": [
+            {
+              "type": "TextBlock",
+              "text": "&nbsp;"
+            },
+            {
+              "type": "Image",
+              "url": "http://acdesignerbeta.azurewebsites.net/assets/Airplane_Ico.png",
+              "size": "small",
+              "spacing": "none"
+            }
+          ]
+        },
+        {
+          "type": "Column",
+          "width": 1,
+          "items": [
+            {
+              "type": "TextBlock",
+              "horizontalAlignment": "right",
+              "text": "Amsterdam",
+              "isSubtle": true
+            },
+            {
+              "type": "TextBlock",
+              "horizontalAlignment": "right",
+              "size": "extraLarge",
+              "color": "accent",
+              "text": "AMS",
+              "spacing": "none"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "TextBlock",
+      "text": "Non-Stop",
+      "weight": "bolder",
+      "spacing": "medium"
+    },
+    {
+      "type": "TextBlock",
+      "text": "Fri, October 18 9:50 PM",
+      "weight": "bolder",
+      "spacing": "none"
+    },
+    {
+      "type": "ColumnSet",
+      "separator": true,
+      "columns": [
+        {
+          "type": "Column",
+          "width": 1,
+          "items": [
+            {
+              "type": "TextBlock",
+              "text": "Amsterdam",
+              "isSubtle": true
+            },
+            {
+              "type": "TextBlock",
+              "size": "extraLarge",
+              "color": "accent",
+              "text": "AMS",
+              "spacing": "none"
+            }
+          ]
+        },
+        {
+          "type": "Column",
+          "width": "auto",
+          "items": [
+            {
+              "type": "TextBlock",
+              "text": "&nbsp;"
+            },
+            {
+              "type": "Image",
+              "url": "http://acdesignerbeta.azurewebsites.net/assets/Airplane_Ico.png",
+              "size": "small",
+              "spacing": "none"
+            }
+          ]
+        },
+        {
+          "type": "Column",
+          "width": 1,
+          "items": [
+            {
+              "type": "TextBlock",
+              "horizontalAlignment": "right",
+              "text": "San Francisco",
+              "isSubtle": true
+            },
+            {
+              "type": "TextBlock",
+              "horizontalAlignment": "right",
+              "size": "extraLarge",
+              "color": "accent",
+              "text": "SFO",
+              "spacing": "none"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
